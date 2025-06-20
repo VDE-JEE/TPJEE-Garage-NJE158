@@ -17,15 +17,15 @@ public class VoitureDAO {
     static ResultSet resu = null;
    
     
-   static public void ajouter(String marque, String modele, String etatString) {
+   static public void ajouter(String matricule, String marque, String modele, String etatString) {
 		EtatVoiture etat;
     	if (connex!=null) {
     		try {
     			etat = EtatVoiture.valueOf(etatString);
 				stmt = connex.createStatement();
-    			String requeteSQL = "INSERT INTO Voiture VALUES ('"
-    								+ marque +"', '" + modele + "', '" + etat +"' );";
-    			resu = stmt.executeQuery(requeteSQL);
+    			String requeteSQL = "INSERT INTO Voiture VALUES ('" + 
+    					matricule +"', '"+ marque +"', '" + modele + "', '" + etat +"' );";
+    			stmt.executeUpdate(requeteSQL);
     			System.out.println("Ajout du produit effectué.");
 			} catch (Exception e) {
 				System.err.println("Erreur SQL :");
@@ -127,73 +127,67 @@ public class VoitureDAO {
 		}
 
    static public Voiture rechercherID(String matricule) {
-    	if (connex!=null) {
+	   Voiture baniole=null;
+	   
+	   EtatVoiture etat ;
+	   if (connex!=null) {
     		try {
-    			Voiture baniole;
 				stmt = connex.createStatement();
 				
     			String requeteSQL = "Select * FROM Voiture "
     								+ "WHERE matricule ='" + matricule + "' ;";
     			resu = stmt.executeQuery(requeteSQL);
-    			System.out.println("Ajout du produit effectué.");
     			
-    			while (resu.next()) {
-	                String marque = resu.getString("marque");
-	                String modele = resu.getString("modele");
-	                String etatStr = resu.getString("etat");
-
-	              //quand tu veux caster en enum, c'est important de placer des try/catch
-	                try {
-	                	EtatVoiture etat = EtatVoiture.valueOf(etatStr);
-						baniole = new Voiture(marque, modele, etat);
-						System.out.println("Voiture " + baniole + "trouvée");
-		    			return baniole;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}  
-    			}
+	    			while (resu.next()) {
+						String marque = resu.getString("marque");
+		                String modele = resu.getString("modele");
+		                String etatStr = resu.getString("etat");
+		            	etat = EtatVoiture.valueOf(etatStr);
+		
+		            	baniole = new Voiture(matricule, marque, modele, etat);
+						System.out.println("Voiture " + baniole + " trouvée !\n");
+	    			}
+    			
+    			
 			} catch (Exception e) {
 				System.err.println("Erreur SQL :");
-                e.printStackTrace();
+				e.printStackTrace();
 			} 
-    		finally {
-				try {
-	                    if (resu != null) resu.close();
-	                    if (stmt != null) stmt.close();
-	             } 
-				 catch (SQLException e) {  e.printStackTrace(); }
-			}
-    	} else System.err.println("Échec de connexion à la base de données.");
-    	System.out.println("Le véhicule n'a pas été trouvé...");
-    	return null;
+    	} else {
+    		System.err.println("Échec de connexion à la base de données.");
+    	}
+    	return baniole;
 	}
 
    static public Voiture modifier(String trouve, String marque, String modele, String etatString ) {
     	EtatVoiture etat;
     	if (connex!=null) {
     		try {
-    			stmt = connex.createStatement();
     			Voiture voitureAChanger = rechercherID(trouve);
+    			stmt = connex.createStatement();
+    			
+    			System.out.println("voiture trouvée par ID : " + voitureAChanger +
+    					"\nChangements à faire : " +marque+ " " + modele +" | "+ etatString);
+    			
     			Voiture voitureChangee;
     			if (voitureAChanger != null) {
     				 
     				etat = EtatVoiture.valueOf(etatString);
     				String requeteSQL = "UPDATE Voiture "
-										+ "SET marque = '" + marque
-										+ "', modele = '" + modele
-										+ "', etat = '" + etat
-										+ "' WHERE matricule = '" 
-										+ trouve + "' ;";
-    				resu = stmt.executeQuery(requeteSQL);
-    				voitureChangee = new Voiture(marque, modele, etat);
+    						+ "SET marque = '" + marque + "' , modele = '" + modele + "', etat = '" + etatString + "' "
+    								+ "WHERE matricule = '" + trouve + "'";
+    				System.out.println("requete : " + requeteSQL);
+    				stmt.executeUpdate(requeteSQL);
+    				voitureChangee = new Voiture(trouve, marque, modele, etat);
     				System.out.println("Modification effectuée avec succès :"
     						+ " \nLa voiture " + voitureAChanger 
     						+ " \n\t est désormais "
-    						+ " \nLa voiture" + voitureChangee);
+    						+ " \nLa voiture" + voitureChangee
+    						+ " \n");
     				return voitureChangee;
     			}else System.err.println("Echec de la mise à jour : Voiture non trouvée.");
 			} 
-    		catch (Exception e) {
+    		catch (SQLException e) {
     			 System.out.println("Echec de la mise à jour : Erreur SQL.");
                 e.printStackTrace();
 			} 
@@ -214,14 +208,15 @@ public class VoitureDAO {
 		
     	if (connex!=null) {
     		try {
-    			stmt = connex.createStatement();
+    			
     			Voiture aLaCasse = rechercherID(trouve);
+    			stmt = connex.createStatement();
     			if (aLaCasse!= null) {
     				
     				String requeteSQL = "DELETE FROM Voiture "
-										+ "' WHERE matricule = '" 
+										+ " WHERE matricule = '" 
 										+ trouve + "' ;";
-    				resu = stmt.executeQuery(requeteSQL);
+    				stmt.executeUpdate(requeteSQL);
     				System.out.println("Véhicule "+ aLaCasse + " supprimé avec succès.");
     			}else System.err.println("Echec de la suppression : Voiture non trouvée.");
 			} 

@@ -22,7 +22,7 @@ public class RechercherVoitureServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("RechercherVoituresServlet - doGet");
-		request.getRequestDispatcher("/WEB-INF/rechercher.jsp").forward(request, response);
+		request.getRequestDispatcher("/rechercher.jsp").forward(request, response);
 	}
 
 	/**
@@ -31,20 +31,25 @@ public class RechercherVoitureServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("RechercherVoituresServlet - doPost");
 		
-		String trouve =(String) request.getAttribute("aTrouver");
+		String trouve = request.getParameter("aTrouver");
 		
 		System.out.println("Voiture à rechercher : " + trouve);
 		List<Voiture> listeVoitures = VoitureDAO.rechercher(trouve);
-		
+		String resultatRecherche;
 		if (!listeVoitures.isEmpty()) {
+			resultatRecherche = "Voici les voitures trouvées";
 			request.setAttribute("Voitures", listeVoitures);
+			request.setAttribute("resultatR", resultatRecherche);
 			System.out.println("Liste voiture récupérée en attribut.");
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		} else { 
+			resultatRecherche = "Aucune voiture trouvée...";
 			request.setAttribute("Voitures", null);
+			request.setAttribute("resultatR", resultatRecherche);
 			System.out.println("Echec de la récupération de la liste.");
+			request.getRequestDispatcher("AfficherVoitureServlet").forward(request, response);
 		}
 		
-		request.getRequestDispatcher("/WEB-INF/afficher.jsp").forward(request, response);
 	}
 
 }

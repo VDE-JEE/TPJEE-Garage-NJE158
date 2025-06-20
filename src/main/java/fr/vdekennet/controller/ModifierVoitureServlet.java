@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fr.vdekennet.model.Voiture;
 import fr.vdekennet.repository.VoitureDAO;
 
 /**
@@ -19,6 +20,7 @@ public class ModifierVoitureServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("ModifierVoitureServlet - doGet");
+		
 		request.getRequestDispatcher("modifier.jsp").forward(request, response);
 	}
 
@@ -27,20 +29,28 @@ public class ModifierVoitureServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("ModifierVoitureServlet - doPost");
+		String trouveMatricule;
+		//trouveMatricule = (String) request.getParameter("matricule");
+		trouveMatricule = (String) request.getAttribute("matricule");
 		
-		String trouveMatricule = (String) request.getAttribute("matricule");
-		String marque = (String) request.getAttribute("VoitureMarque");
-		String modele = (String) request.getAttribute("VoitureModele");
-		String etat = (String) request.getAttribute("VoitureEtat");
-		System.out.println("Valeurs : " + trouveMatricule + " Marque " + marque + " " + modele + " etat " + etat);
+		String marque = request.getParameter("VoitureMarque");
+		String modele = request.getParameter("VoitureModele");
+		String etat = request.getParameter("VoitureEtat");
+		
+		System.out.println("Valeurs : " + trouveMatricule + "| Marque : " + marque + " " + modele + "| etat : " + etat);
 		
 		if (trouveMatricule!=null) {
 			VoitureDAO.modifier(trouveMatricule, marque, modele, etat);
-			System.out.println("Modification effectuée.");
 		}
 		
 		
-		request.getRequestDispatcher("modifier.jsp").forward(request, response);
+		/*
+		if (voiture!=null) {
+			VoitureDAO.modifier(voiture.getMatricule(), voiture.getMarque(), voiture.getModele(), voiture.getEtat().toString());
+		}
+		*/
+		
+		request.getRequestDispatcher("AfficherVoitureServlet").forward(request, response);
 	}
 
 }

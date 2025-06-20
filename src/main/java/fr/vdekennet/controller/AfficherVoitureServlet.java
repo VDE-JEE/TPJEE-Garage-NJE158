@@ -23,7 +23,7 @@ public class AfficherVoitureServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("AfficherVoituresServlet - doGet");
 		doPost(request, response);
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		request.getRequestDispatcher("index.jsp");
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class AfficherVoitureServlet extends HttpServlet {
 			System.out.println("Echec de la récupération de la liste.");
 		}
 		
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
 }

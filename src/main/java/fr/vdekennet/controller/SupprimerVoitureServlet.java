@@ -28,7 +28,7 @@ public class SupprimerVoitureServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("SupprimerVoitureServlet - doPost");
 		
-		String trouveMatricule = (String) request.getAttribute("matricule");
+		String trouveMatricule = (String) request.getParameter("matricule");
 		System.out.println("Matricule à delete : " + trouveMatricule);
 		
 		if (trouveMatricule!=null) {
@@ -37,7 +37,7 @@ public class SupprimerVoitureServlet extends HttpServlet {
 		} else System.out.println("Suppression NON effectuée.");
 		
 		
-		request.getRequestDispatcher("supprimer.jsp").forward(request, response);
+		request.getRequestDispatcher("AfficherVoitureServlet").forward(request, response);
 	}
 
 }
