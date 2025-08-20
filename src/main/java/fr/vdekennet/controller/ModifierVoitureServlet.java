@@ -31,7 +31,7 @@ public class ModifierVoitureServlet extends HttpServlet {
 		System.out.println("ModifierVoitureServlet - doPost");
 		String trouveMatricule;
 		//trouveMatricule = (String) request.getParameter("matricule");
-		trouveMatricule = (String) request.getAttribute("matricule");
+		trouveMatricule = (String) request.getParameter("matricule");
 		
 		String marque = request.getParameter("VoitureMarque");
 		String modele = request.getParameter("VoitureModele");
@@ -41,6 +41,7 @@ public class ModifierVoitureServlet extends HttpServlet {
 		
 		if (trouveMatricule!=null) {
 			VoitureDAO.modifier(trouveMatricule, marque, modele, etat);
+			System.out.println("Voiture modifiée. Affichage en cours. ");
 		}
 		
 		

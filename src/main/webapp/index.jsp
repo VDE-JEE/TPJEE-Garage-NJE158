@@ -179,66 +179,43 @@
 									<jsp:include page="ajouter.jsp"></jsp:include>
 								</tr>
 							<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-							<c:forEach var="voiture" items="${Voitures}">
+							<c:forEach var="voitureA" items="${Voitures}">
 								<tr>
-									<td>${voiture.matricule}</td>
-									<td>${voiture.marque}</td>
-									<td>${voiture.modele}</td>
-									<td>${voiture.etat}</td>
+									<td>${voitureA.matricule}</td>
+									<td>${voitureA.marque}</td>
+									<td>${voitureA.modele}</td>
+									<td>${voitureA.etat}</td>
 									<td>
-										<form method="get">
-											<input type="text" class="form-control" id="chercheSur" name="matricule" value="${voiture.matricule}" hidden>
-											<button class="w-80 btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#modifier"
-											  name="alter" value="modifier">Modifier</button>
-											<button class="w-80 btn btn-secondary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#supprimer"
-											  name="alter" value="supprimer" >Supprimer</button>
-											  <div class="modal fade" id="modifier" tabindex="-1" aria-hidden="true">
-											<div class="modal-dialog modal-lg">
-
-													<div class="modal-content rounded-4">
-														<% request.getAttribute("voiture"); %>
-														<div class="modal-header p-5 pb-4 border-bottom-0">
-															<h5 class="fw-bold mb-0 fs-2">Modifier la voiture</h5>
-															<button type="button" class="btn-close"
-																data-bs-dismiss="modal" aria-label="Close"></button>
-														</div>
-
-														<div class="modal-body p-9 pt-10">
-															<form class="needs-validation"
-																action="ModifierVoitureServlet" method="post" novalidate>
-																<div class="form-floating mb-3">
-																	<input type="text" class="form-control"
-																		style="bgcolor: red" name="matricule"
-																		value="${voiture.getMatricule()}" readonly> <label
-																		for="matricule" class="form-label">Matricule</label>
-																</div>
-
-																<div class="form-floating mb-3">
-																	<input type="text" class="form-control" id="marque"
-																		name="VoitureMarque" placeholder="Exemple : Peugeot"
-																		value="${voiture.getMarque()}" required> <label
-																		for="marque" class="form-label">Marque</label>
-																	<div class="invalid-feedback">La marque de la
-																		voiture est requise.</div>
-																</div>
-
-																<div class="form-floating mb-3">
-																	<input type="text" class="form-control" id="modele"
-																		name="VoitureModele" value="${voiture.modele}"
-																		placeholder="modele 3008" required> <label
-																		for="modele" class="form-label">Modèle</label>
-																	<div class="invalid-feedback">Il manque le
-																		modèle.</div>
-																</div>
-
-																<div class="w-100  mb-3">
-																	<h6>État Actuel</h6>
-																	<input id="PRIS_EN_CHARGE" name="VoitureEtat"
-																		type="radio" class="form-check-input"
-																		value="PRIS_EN_CHARGE" checked required> <label
-																		class="form-check-label" for="PRIS_EN_CHARGE"
-																		style="display: inline;">Pris en Charge</label> <input
-																		id="EN_COURS" name="VoitureEtat" type="radio"
+										<!-- bouton fenetre modale -->
+										<button class="btn btn-secondary my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#modalSignin">Modifier</button>
+										<!-- Fenetre modale -->
+										<div class="modal fade modal-sheet p-4 py-md-5" data-bs-backdrop="false" tabindex="-1" role="dialog" id="modalSignin" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content rounded-4 shadow">
+													<div class="modal-header p-5 pb-4 border-bottom-0">
+														<h1 class="fw-bold mb-0 fs-2">Modifier cette valeur</h1>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+													</div>
+													<div class="modal-body p-5 pt-0">
+														<form class="form-inline my-2 my-lg-0" action="ModifierVoitureServlet" method="post">
+															<div class="form-floating mb-3">
+																<input type="text" class="form-control" style="color: grey" name="matricule"
+																		value="${voitureA.matricule}" readonly> 
+																<label for="matricule" class="form-label">Matricule</label> 
+															</div>
+															<div class="form-floating mb-3">
+																<input type="text" class="form-control rounded-3" id="marque" name="VoitureMarque" value="${voitureA.marque}"> 
+																<label for="produitDesc">Marque</label>
+															</div>
+															<div class="form-floating mb-3"> 
+																<input type="text" id="produitPU" class="form-control" name="VoitureModele" value="${voitureA.modele}" required autofocus>
+																<label for="produitPU">Modèle</label>
+															</div>
+															<div class="form-floating w-100 mb-3">
+																	<input id="PRIS_EN_CHARGE" name="VoitureEtat" type="radio" class="form-check-input" value="PRIS_EN_CHARGE" checked required> 
+																	<label class="form-check-label" for="PRIS_EN_CHARGE"
+																		style="display: inline;">Pris en Charge</label> 
+																	<input id="EN_COURS" name="VoitureEtat" type="radio"
 																		class="form-check-input" value="EN_COURS" required>
 																	<label class="form-check-label" for="EN_COURS"
 																		style="display: inline;">En cours</label> <input
@@ -246,65 +223,51 @@
 																		class="form-check-input" value="TERMINE" required>
 																	<label class="form-check-label" for="TERMINE"
 																		style="display: inline;">Terminé</label>
-
-																</div>
-																<button class="w-100 btn btn-primary btn-lg"
-																	type="submit">Valider</button>
+																<label for="produitQteStock">Etat</label>
+															</div>
+			
+															<button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Modifier</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+								
+										<!-- bouton fenetre modale pour supprimer -->								
+										<button class="btn btn-secondary my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#modalSheet" name="supprimer">Supprimer</button>
+										<!-- fenetre modale pour supprimer -->
+										<div class="modal modal-sheet p-4 py-md-5" data-bs-backdrop="false" tabindex="-1" role="dialog" id="modalSheet" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-dialog">
+													<div class="modal-content rounded-4 shadow">
+														<div class="modal-header border-bottom-0">
+															<h1 class="modal-title fs-5">Confirmation de la suppression</h1>
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														
+														<div class="modal-body py-0">
+															<p>Voule-vous vraiment supprimer la voiture suivante :</p>
+															<p>${voitureA.marque} ${voitureA.modele} immatriculée ${voitureA.matricule} ?</p>
+														</div>
+														
+														<div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+															<form class="needs-validation"
+																action="SupprimerVoitureServlet" method="post"
+																novalidate>
+																<input type="text" style="bgcolor: red" name="matricule" 
+																value="${voitureA.getMatricule()}" hidden>
+																<button type="submit" class="btn btn-lg btn-primary">Supprimer</button>
+																<button type="button" class="btn btn-lg btn-secondary"
+																	data-bs-dismiss="modal">Annuler</button>
 															</form>
 														</div>
 													</div>
 												</div>
+											</div>
 										</div>
-										
-										
-										<div class="modal fade" id="supprimer" tabindex="-1" aria-hidden="true">
-											<div class="modal-dialog modal-lg">
-													<div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5"
-														tabindex="-1" role="dialog" id="modalSheet">
-														<div class="modal-dialog">
-															<div class="modal-content rounded-4 shadow">
-																<div class="modal-header border-bottom-0">
-																	<h1 class="modal-title fs-5">Confirmation de la
-																		suppression</h1>
-																	<button type="button" class="btn-close"
-																		data-bs-dismiss="modal" aria-label="Close"></button>
-																</div>
-																<div class="modal-body py-0">
-																	<p>Voule-vous vraiment supprimer la voiture
-																		suivante :</p>
-																	<p>${voiture.marque}${voiture.modele} immatriculée
-																		${voiture.matricule} ?</p>
-																</div>
-																<div
-																	class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
-																	<form class="needs-validation"
-																		action="SupprimerVoitureServlet" method="post"
-																		novalidate>
-																		<input type="text" style="bgcolor: red"
-																			name="matricule" value="${voiture.getMatricule()}"
-																			hidden>
-																		<button type="submit" class="btn btn-lg btn-primary">Supprimer</button>
-																		<button type="button" class="btn btn-lg btn-secondary"
-																			data-bs-dismiss="modal">Annuler</button>
-																	</form>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-										</div>
-										</form>
-										 <!-- 
-										<form action="IDRechercherVoitureServlet" method="post">
-											<input type="text" class="form-control" id="chercheSur" name="aTrouver" value="${voiture.matricule}" hidden>
-											<button class="w-80 btn btn-primary btn-lg" type="submit" data-bs-toggle="modal" data-bs-target="#modifier"
-											  name="alter" value="modifier">Modifier</button>
-											<button class="w-80 btn btn-secondary btn-lg" type="submit" data-bs-toggle="modal" data-bs-target="#supprimer"
-											  name="alter" value="supprimer" >Supprimer</button>
-										</form>
-										 -->
 									</td>
 								</tr>
+									 
 							</c:forEach>
 						</tbody>
 					</table>
